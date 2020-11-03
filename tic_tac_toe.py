@@ -1,4 +1,4 @@
-from colorama import Fore, init
+from colorama import init
 from termcolor import colored
 
 
@@ -26,10 +26,10 @@ class Game:
     def x_turn(self):
         while True:
             try:
-                x_turn = int(input('Select a cell on the field: '))
+                x_turn = int(input('Select a cell on the field (X): '))
                 if x_turn < 0 or x_turn > 9:
                     print('Sorry, but you can use only numbers from 0 to 9')
-                elif self.field_dict[x_turn] == 'X' or self.field_dict[x_turn] == 'O':
+                elif self.field_dict[x_turn] == colored('X', 'red') or self.field_dict[x_turn] == colored('O', 'blue'): # error----------------------------------------
                     print('Sorry, this cell is busy')
                 else:
                     break
@@ -40,10 +40,10 @@ class Game:
     def o_turn(self):
         while True:
             try:
-                o_turn = int(input('Select a cell on the field: '))
+                o_turn = int(input('Select a cell on the field (O): '))
                 if o_turn < 0 or o_turn > 9:
                     print('Sorry, but you can use only numbers from 0 to 9')
-                elif self.field_dict[o_turn] == 'X' or self.field_dict[o_turn] == 'O':
+                elif self.field_dict[o_turn] == colored('X', 'red') or self.field_dict[o_turn] == colored('O', 'blue'): # error ---------------------------------------
                     print('Sorry, this cell is busy')
                 else:
                     break
@@ -51,32 +51,48 @@ class Game:
                 print('Sorry, but you can use only numbers from 0 to 9')
         self.field_dict[o_turn] = colored('O', 'blue')
 
-    def check_if_someone_win(self):
+    def check_if_someone_win(self, number_of_turn):
         i = 1
         for i in range(1, 10, 3):
             if self.field_dict[i] == self.field_dict[i+1] == self.field_dict[i+2]:
                 self.print_field()
                 print('game over')
+                if number_of_turn % 2 == 0:
+                    print('X - your are winner')
+                else:
+                    print('O - your are winner')
                 exit(0)
         i = 1
         for i in range(1, 4):
             if self.field_dict[i] == self.field_dict[i+3] == self.field_dict[i+6]:
                 self.print_field()
                 print('game over')
+                if number_of_turn % 2 == 0:
+                    print('X - your are winner')
+                else:
+                    print('O - your are winner')
                 exit(0)
         if self.field_dict[1] == self.field_dict[5] == self.field_dict[9]:
             self.print_field()
             print('game over')
+            if number_of_turn % 2 == 0:
+                print('X - your are winner')
+            else:
+                print('O - your are winner')
             exit(0)
         if self.field_dict[3] == self.field_dict[5] == self.field_dict[7]:
             self.print_field()
             print('game over')
+            if number_of_turn % 2 == 0:
+                print('X - your are winner')
+            else:
+                print('O - your are winner')
             exit(0)
 
     def check_if_draw(self):
         result = True
         for i in self.field_dict.values():
-            if i != 'X' or i != 'O':
+            if i != colored('X', 'red') and i != colored('O', 'blue'):
                 result = False
         return result
 
@@ -85,15 +101,16 @@ if __name__ == '__main__':
     game = Game()
     counter = 0
     while True:
+        if game.check_if_draw():
+            print('Draw')
+            exit(0)
         game.print_field()
         if counter % 2 == 0:
             game.x_turn()
         else:
             game.o_turn()
-        game.check_if_someone_win()
-        if game.check_if_draw():
-            print('Draw')
-            exit(0)
+        if counter >= 4:
+            game.check_if_someone_win(number_of_turn=counter)
         counter += 1
 
 
